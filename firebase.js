@@ -1,13 +1,14 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import * as googleapi from './api-keys.env'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyA0KDx1DC-C4e5inEYD3GGvsBGXsduPb5c",
+  apiKey: googleapi,
   authDomain: "toney-tool-inventory.firebaseapp.com",
   projectId: "toney-tool-inventory",
   storageBucket: "toney-tool-inventory.firebasestorage.app",
