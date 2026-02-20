@@ -1,27 +1,14 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Stack, Typography, Button, Modal, TextField } from '@mui/material'
-import { getFirestore, collection, doc, getDocs, query, setDoc, deleteDoc, getDoc } from 'firebase/firestore'
-import { initializeApp } from 'firebase/app';
+import { collection, doc, getDocs, query, setDoc, deleteDoc, getDoc } from 'firebase/firestore'
+import { firestore } from '@/firebase'
 
 export default function Home() {
   const [inventory, setInventory] = useState([])
   const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('')
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyA0KDx1DC-C4e5inEYD3GGvsBGXsduPb5c",
-    authDomain: "toney-tool-inventory.firebaseapp.com",
-    projectId: "toney-tool-inventory",
-    storageBucket: "toney-tool-inventory.firebasestorage.app",
-    messagingSenderId: "85130958660",
-    appId: "1:85130958660:web:65b39dcfa00a73266ae911",
-    measurementId: "G-07LMZPCN2G"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const firestore = getFirestore(app);
 
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'inventory'))
@@ -33,9 +20,12 @@ export default function Home() {
     setInventory(inventoryList)
   }
 
-  // useEffect(() => {
-  //   updateInventory()
-  // }, [])
+  useEffect(() => {
+    const fetchInventory = async () => {
+      await updateInventory()
+    }
+    fetchInventory()
+  }, [])
 
   const addItem = async (item) => {
     const docRef = doc(collection(firestore, 'inventory'), item)
