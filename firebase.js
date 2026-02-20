@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA0KDx1DC-C4e5inEYD3GGvsBGXsduPb5c",
+  apiKey: process.env.API_KEY,
   authDomain: "toney-tool-inventory.firebaseapp.com",
   projectId: "toney-tool-inventory",
   storageBucket: "toney-tool-inventory.firebasestorage.app",
