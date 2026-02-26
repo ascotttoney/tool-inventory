@@ -32,7 +32,7 @@ export default function Home() {
     const docRef = doc(collection(firestore, 'inventory'), item)
     const docSnap = await getDoc(docRef)
     if (docSnap.exists()) {
-      const { quantity: existingQuantity } = docSnap.data()
+      const { quantity: quantity } = docSnap.data()
       await setDoc(docRef, { quantity: existingQuantity + quantity })
     } else {
       await setDoc(docRef, { quantity: quantity })
