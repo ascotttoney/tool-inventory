@@ -9,6 +9,7 @@ export default function Home() {
   const [inventory, setInventory] = useState([])
   const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('')
+  const [quantity, setQuantity] = useState(1)
 
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'inventory'))
@@ -27,14 +28,14 @@ export default function Home() {
     fetchInventory()
   }, [])
 
-  const addItem = async (item) => {
+  const addItem = async (item, quantity) => {
     const docRef = doc(collection(firestore, 'inventory'), item)
     const docSnap = await getDoc(docRef)
     if (docSnap.exists()) {
-      const { quantity } = docSnap.data()
-      await setDoc(docRef, { quantity: quantity + 1 })
+      const { quantity: existingQuantity } = docSnap.data()
+      await setDoc(docRef, { quantity: existingQuantity + quantity })
     } else {
-      await setDoc(docRef, { quantity: 1 })
+      await setDoc(docRef, { quantity: quantity })
     }
     await updateInventory()
   }
@@ -50,6 +51,12 @@ export default function Home() {
         await setDoc(docRef, { quantity: quantity - 1 })
       }
     }
+    await updateInventory()
+  }
+
+  const editItem = async (item, newName, newQuantity) => {
+    const docRef = doc(collection(firestore, 'inventory'), item)
+    await setDoc(docRef, { itemName: newName, quantity: newQuantity })
     await updateInventory()
   }
 
@@ -94,11 +101,19 @@ export default function Home() {
           <Stack width="100%" direction={'row'} spacing={2}>
             <TextField
               id="outlined-basic"
-              label="Item"
+              label="Tool"
               variant="outlined"
               fullWidth
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
+            />
+            <TextField
+              id="outlined-basic"
+              label="Quantity"
+              variant="outlined"
+              fullWidth
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
             />
             <Button
               variant="outlined"
@@ -126,7 +141,7 @@ export default function Home() {
           alignItems={'center'}
         >
           <Typography variant={'h2'} color={'#333'} textAlign={'center'}>
-            Inventory Items
+            Tool Inventory
           </Typography>
         </Box>
         <Stack width="800px" height="300px" spacing={2} overflow={'auto'}>
@@ -147,6 +162,9 @@ export default function Home() {
               <Typography variant={'h3'} color={'#333'} textAlign={'center'}>
                 Quantity: {quantity}
               </Typography>
+              <Button variant="contained" onClick={() => editItem(quantity, name)}>
+                Edit
+              </Button>
               <Button variant="contained" onClick={() => removeItem(name)}>
                 Remove
               </Button>
